@@ -98,8 +98,9 @@ function upload() {
         exit 1
     fi
 
-    for REMOTE_DESTINATION in "${RCLONE_REMOTE}"
+    for REMOTE_DESTINATION in ${RCLONE_REMOTE}
     do
+        color blue "Uploading ${UPLOAD_FILE} ${REMOTE_DESTINATION}"
         rclone copy "${UPLOAD_FILE}" "${REMOTE_DESTINATION}"
         if [[ $? != 0 ]]; then
             color red "upload failed for ${REMOTE_DESTINATION}"
@@ -108,7 +109,7 @@ function upload() {
         fi
     done
 
-    if [[ -z ${UPLOAD_FAILURE} ]]; then
+    if [[ ! -z ${UPLOAD_FAILURE} ]]; then
         color red "upload failed for ${REMOTE_DESTINATION}"
 
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z") for ${UPLOAD_FAILURE}"
