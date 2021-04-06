@@ -170,16 +170,18 @@ function init_env() {
     get_env CRON
     CRON="${CRON:-"5 * * * *"}"
 
-    # RCLONE_REMOTE_NAME
-    get_env RCLONE_REMOTE_NAME
-    RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME:-"BitwardenBackup"}"
+    if [[ -z ${RCLONE_REMOTE} ]]; then
+        # RCLONE_REMOTE_NAME
+        get_env RCLONE_REMOTE_NAME
+        RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME:-"BitwardenBackup"}"
 
-    # RCLONE_REMOTE_DIR
-    get_env RCLONE_REMOTE_DIR
-    RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR:-"/BitwardenBackup/"}"
+        # RCLONE_REMOTE_DIR
+        get_env RCLONE_REMOTE_DIR
+        RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR:-"/BitwardenBackup/"}"
 
-    # RCLONE_REMOTE
-    RCLONE_REMOTE="${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}"
+        # RCLONE_REMOTE
+        RCLONE_REMOTE="${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}"
+    fi
 
     # ZIP_ENABLE
     get_env ZIP_ENABLE
