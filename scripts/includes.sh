@@ -30,11 +30,16 @@ function color() {
 #     None
 ########################################
 function check_rclone_connection() {
-    rclone mkdir "${RCLONE_REMOTE}"
-    if [[ $? != 0 ]]; then
-        color red "storage system connection failure"
-        exit 1
-    fi
+
+    for REMOTE_DESTINATION in ${RCLONE_REMOTE}
+    do
+        rclone mkdir "${REMOTE_DESTINATION}"
+        if [[ $? != 0 ]]; then
+            color red "storage system connection failure on ${REMOTE_DESTINATION}"
+            exit 1
+        fi
+    done
+
 }
 
 ########################################
