@@ -122,16 +122,19 @@ function clear_history() {
     if [[ "${BACKUP_KEEP_DAYS}" -gt 0 ]]; then
         color blue "delete ${BACKUP_KEEP_DAYS} days ago backup files"
 
-        mapfile -t RCLONE_DELETE_LIST < <(rclone lsf "${RCLONE_REMOTE}" --min-age "${BACKUP_KEEP_DAYS}d")
-
-        for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
+        for REMOTE_DESTINATION in ${RCLONE_REMOTE}
         do
-            color yellow "deleting \"${RCLONE_DELETE_FILE}\""
+            mapfile -t RCLONE_DELETE_LIST < <(rclone lsf "${REMOTE_DESTINATION}" --min-age "${BACKUP_KEEP_DAYS}d")
 
-            rclone delete "${RCLONE_REMOTE}/${RCLONE_DELETE_FILE}"
-            if [[ $? != 0 ]]; then
-                color red "delete \"${RCLONE_DELETE_FILE}\" failed"
-            fi
+            for RCLONE_DELETE_FILE in "${RCLONE_DELETE_LIST[@]}"
+            do
+                color yellow "deleting \"${RCLONE_DELETE_FILE}\""
+
+                rclone delete "${REMOTE_DESTINATION}/${RCLONE_DELETE_FILE}"
+                if [[ $? != 0 ]]; then
+                    color red "delete \"${RCLONE_DELETE_FILE}\" failed"
+                fi
+            done
         done
     fi
 }
