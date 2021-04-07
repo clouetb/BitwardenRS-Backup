@@ -34,11 +34,19 @@ function check_rclone_connection() {
     for REMOTE_DESTINATION in ${RCLONE_REMOTE}
     do
         rclone mkdir "${REMOTE_DESTINATION}"
+
         if [[ $? != 0 ]]; then
-            color red "storage system connection failure on ${REMOTE_DESTINATION}"
-            exit 1
+            color red "Dir creation failed for ${REMOTE_DESTINATION}"
+
+            DIR_CREATION_FAILURE = "${DIR_CREATION_FAILURE} ${REMOTE_DESTINATION}"
         fi
     done
+
+    if [[ ! -z ${DIR_CREATION_FAILURE} ]]; then
+        send_mail_content "FALSE" "Dir creation failed for ${DIR_CREATION_FAILURE}"
+
+        exit 1
+    fi
 
 }
 
@@ -175,18 +183,7 @@ function init_env() {
     get_env CRON
     CRON="${CRON:-"5 * * * *"}"
 
-    if [[ -z ${RCLONE_REMOTE} ]]; then
-        # RCLONE_REMOTE_NAME
-        get_env RCLONE_REMOTE_NAME
-        RCLONE_REMOTE_NAME="${RCLONE_REMOTE_NAME:-"BitwardenBackup"}"
-
-        # RCLONE_REMOTE_DIR
-        get_env RCLONE_REMOTE_DIR
-        RCLONE_REMOTE_DIR="${RCLONE_REMOTE_DIR:-"/BitwardenBackup/"}"
-
-        # RCLONE_REMOTE
-        RCLONE_REMOTE="${RCLONE_REMOTE_NAME}:${RCLONE_REMOTE_DIR}"
-    fi
+    get_env RCLONE_REMOTE="${RCLONE_REMOTE:-"BitwardenBackup:/BitwardenBackup/"}"
 
     # ZIP_ENABLE
     get_env ZIP_ENABLE
@@ -261,8 +258,6 @@ function init_env() {
     color yellow "DATA_ATTACHMENTS: ${DATA_ATTACHMENTS}"
     color yellow "========================================"
     color yellow "CRON: ${CRON}"
-    color yellow "RCLONE_REMOTE_NAME: ${RCLONE_REMOTE_NAME}"
-    color yellow "RCLONE_REMOTE_DIR: ${RCLONE_REMOTE_DIR}"
     color yellow "RCLONE_REMOTE: ${RCLONE_REMOTE}"
     color yellow "ZIP_ENABLE: ${ZIP_ENABLE}"
     color yellow "ZIP_PASSWORD: ${#ZIP_PASSWORD} Chars"

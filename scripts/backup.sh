@@ -91,7 +91,7 @@ function upload() {
 
     # upload file not exist
     if [[ ! -e "${UPLOAD_FILE}" ]]; then
-        color red "upload file not found"
+        color red "Upload file not found"
 
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z"). Reason: Upload file not found."
 
@@ -103,15 +103,13 @@ function upload() {
         color blue "Uploading ${UPLOAD_FILE} ${REMOTE_DESTINATION}"
         rclone copy "${UPLOAD_FILE}" "${REMOTE_DESTINATION}"
         if [[ $? != 0 ]]; then
-            color red "upload failed for ${REMOTE_DESTINATION}"
+            color red "Upload failed for ${REMOTE_DESTINATION}"
 
-            UPLOAD_FAILURE = "${UPLOAD_FAILURE}, ${REMOTE_DESTINATION}"
+            UPLOAD_FAILURE = "${REMOTE_DESTINATION} ${UPLOAD_FAILURE}"
         fi
     done
 
     if [[ ! -z ${UPLOAD_FAILURE} ]]; then
-        color red "upload failed for ${REMOTE_DESTINATION}"
-
         send_mail_content "FALSE" "File upload failed at $(date +"%Y-%m-%d %H:%M:%S %Z") for ${UPLOAD_FAILURE}"
 
         exit 1
@@ -131,11 +129,18 @@ function clear_history() {
                 color yellow "deleting \"${RCLONE_DELETE_FILE}\""
 
                 rclone delete "${REMOTE_DESTINATION}/${RCLONE_DELETE_FILE}"
+
                 if [[ $? != 0 ]]; then
-                    color red "delete \"${RCLONE_DELETE_FILE}\" failed"
+                    color red "Deletion failed for ${REMOTE_DESTINATION}/${RCLONE_DELETE_FILE}"
+
+                    DELETION_FAILURE = "${REMOTE_DESTINATION}/${RCLONE_DELETE_FILE} ${DELETION_FAILURE}"
                 fi
             done
         done
+
+        if [[ ! -z ${DELETION_FAILURE} ]]; then
+            send_mail_content "FALSE" "File deletion failed for ${DELETION_FAILURE}"
+        fi
     fi
 }
 
