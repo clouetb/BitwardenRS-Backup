@@ -151,12 +151,15 @@ If not, the password will be asked for interactively.
 
 > **Note:** All environment variables have default values, and you can use the docker image without setting environment variables.
 
-#### RCLONE_REMOTE_NAME
+#### RCLONE_REMOTE
 
 Rclone remote name, you can name it yourself.
 
-Default: `BitwardenBackup`
+Default: `BitwardenBackup:/BitwardenBackup/`
 
+For the paranoids, you can also specify several remotes (which have to be configured as above by running the config command several times).
+
+Example: `BitwardenBackupOneDrive:/BitwardenBackup/ BitwardenBackupGoogleDrive:/BitwardenBackup/`
 #### RCLONE_REMOTE_DIR
 
 Folder for storing backup files in the storage system.
