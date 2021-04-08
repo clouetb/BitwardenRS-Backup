@@ -153,17 +153,15 @@ docker run --rm -it \
 
 > **注意：** 所有的环境变量都有默认值，你可以在不设置环境变量的情况下使用 Docker 镜像。
 
-#### RCLONE_REMOTE_NAME
+#### RCLONE_REMOTE
 
 Rclone 远程名称，你可以自己修改命名。
 
-默认值：`BitwardenBackup`
+默认值：`BitwardenBackup:/BitwardenBackup/`
 
-#### RCLONE_REMOTE_DIR
+对于偏执狂，您还可以指定多个遥控器（必须通过多次运行config命令按上述配置遥控器）。
 
-远程存储系统中存放备份文件的文件夹路径。
-
-默认值：`/BitwardenBackup/`
+范例：`BitwardenBackupOneDrive/BitwardenBackup/ BitwardenBackupGoogleDrive:/BitwardenBackup/`
 
 #### CRON
 
