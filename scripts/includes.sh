@@ -43,7 +43,7 @@ function check_rclone_connection() {
     done
 
     if [[ ! -z ${DIR_CREATION_FAILURE} ]]; then
-        send_mail_content "FALSE" "Dir creation failed for ${DIR_CREATION_FAILURE}"
+        color red "storage system connection failure for ${DIR_CREATION_FAILURE}"
 
         exit 1
     fi
