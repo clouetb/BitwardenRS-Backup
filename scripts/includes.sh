@@ -183,7 +183,9 @@ function init_env() {
     get_env CRON
     CRON="${CRON:-"5 * * * *"}"
 
-    get_env RCLONE_REMOTE="${RCLONE_REMOTE:-"BitwardenBackup:/BitwardenBackup/"}"
+    # RCLONE_REMOTE
+    get_env RCLONE_REMOTE
+    RCLONE_REMOTE="${RCLONE_REMOTE:-"BitwardenBackup:/BitwardenBackup/"}"
 
     # ZIP_ENABLE
     get_env ZIP_ENABLE
